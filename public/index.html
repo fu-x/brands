@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>brand plus</title>
+  <script src="lib/vue.js"></script>
+  <script src="lib/vue-resource.js"></script>
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+</head>
+<body>
+  <div id="app">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">添加品牌</h3>
+      </div>
+      <div class="panel-body form-inline">
+        <label>
+          name:
+          <input type="text" class="form-control" v-model="name">
+        </label>
+        <input type="button" value="添加" class="btn btn-primary" @click="add">
+        <label>
+          search:
+          <input type="text" class="form-control" v-model="keywords">
+        </label>
+      </div>
+    </div>
+    <table class="table table-hover table-bordered table-striped">
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Operation</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="item in search(keywords)" :key="item.id">
+        <td>{{ item.id }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.newDate}}</td>
+        <td><a href="#" @click.prevent="del(item.id)">删除</a></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <script>
+    //全局配置数据接口根路径
+    Vue.http.options.root = "http://localhost:3000/";
+    //全局配置emulateJSON选项
+    Vue.http.options.emulateJSON = true;
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            name:"",
+            keywords:"",
+            list:[
+            ],
+        },
+        methods:{
+            add(){
+                var date = new Date();
+                this.$http.post("addproduct",{
+                  name:this.name, 
+                  newDate:date.toString()
+                },
+                {emulateJSON:true})
+                .then(result=>{
+                    if (result.body.status == 200){
+                        this.getList();
+                        this.name = "";
+                    }else {
+                        alert("连接服务器失败");
+                    }
+                })
+            },
+            getList(){
+                this.$http.get("getprodlist").then(result=>{
+                    if (result.body.status == 200){
+                        this.list = result.body.message;
+                    }else{
+                        alert("数据库连接失败");
+                    }
+                })
+            },
+            del(id){
+              this.$http.get("delproduct?id=" + id).then(result=>{
+                  if (result.body.status == 200){
+                      this.getList();
+                  }else{
+                      alert("数据库连接失败");
+                  }
+              })
+            },
+            search(keywords){
+              return this.list.filter(ele=>{
+              if(ele.name.indexOf(keywords)!=-1||ele.id.toString().indexOf(keywords)!=-1)
+                return true;
+              })
+            }
+        },
+        created(){
+            this.getList();
+        }
+    })
+  </script>
+</body>
+</html>
