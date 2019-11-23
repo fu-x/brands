@@ -4,7 +4,7 @@
 
 **贴图：**
 
-![1574493557959](C:\Users\fuxiang\AppData\Roaming\Typora\typora-user-images\1574493557959.png)
+![1](https://fu-x.github.io/2019/11/23/brands/1.png)
 
 数据库有一个brands表，结构如下，id要设置为自动递增：
 
@@ -88,7 +88,7 @@
 
 来查看接口数据。可以实现在数据库中添加一些数据，方便测试。
 
-![1574492205681](C:\Users\fuxiang\AppData\Roaming\Typora\typora-user-images\1574492205681.png)
+![2](https://fu-x.github.io/2019/11/23/brands/2.png)
 
 如果可以查看到数据，就说明我们的接口完成了。接下来我们就去可以实现前端功能了。
 
